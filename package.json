@@ -1,0 +1,38 @@
+{
+  "name": "@bennybot/quickbot",
+  "version": "1.0.0",
+  "description": "Quickly and Easily Create Discord Bots with this discordjs API",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^13.0.0",
+    "fs": "^0.0.0",
+    "inquirer": "^3.0.0",
+    "mkdirp": "^0.5.1",
+    "request": "^2.88.0",
+    "rimraf": "^2.6.2",
+    "yargs": "^12.0.0",
+    "emoji-dictionary": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BennyBot/quickbot-js.git"
+  },
+  "keywords": [
+    "discord",
+    "API",
+    "easy"
+  ],
+  "author": {
+    "name" : "Benjamin Davis",
+    "email" : "btdavis1603@gmail.com",
+    "url" : "http://github.com/BennyBot"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BennyBot/quickbot-js/issues"
+  },
+  "homepage": "https://github.com/BennyBot/quickbot-js#readme"
+}
