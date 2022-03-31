@@ -15,32 +15,21 @@ module.exports = class MessageHandler {
             this.string = this.string.toLowerCase();
         }
 
-        if(this.type_of_check === "contains") {
-            if(content.includes(this.string)) {
-                this.data = await this.callback(message, this.data);
-            }
-        }
-        else if(this.type_of_check === "endswith") {
-            if(content.endsWith(this.string)) {
-                this.data = await this.callback(message, this.data);
-            }
-        }
-        else if(this.type_of_check === "startswith") {
-            if(content.startsWith(this.string)) {
-                this.data = await this.callback(message, this.data);
-            }
-        }
-        else if(this.type_of_check === "equals") {
-            if(content === this.string) {
-                this.data = await this.callback(message, this.data);
-            }
-        }
-        else if(this.type_of_check === "regex") {
-            if(content.match(this.string)) {
-                this.data = await this.callback(message, this.data);
-            }
+        let matched = false;
+
+        let type_to_func = {
+            "contains" : content.includes,
+            "endswith" : content.endsWith,
+            "startswith" : content.startsWith,
+            "regex" : content.match,
+            "equals" : (string) => {return content == string}
         }
 
+        matched = type_to_func[this.type_of_check](this.string);
+
+        if (!matched) return;
+
+        this.data = await this.callback(message, this.data) ?? this.data;
         return;
     }
 }
