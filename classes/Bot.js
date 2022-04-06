@@ -1,6 +1,6 @@
 const Command = require('./Command.js');
 const MessageHandler = require('./MessageHandler.js');
-const fs = require('fs');;
+const fs = require('fs');
 const Discord = require("discord.js");
 
 // Add commands to the list of commands for the bot
@@ -67,11 +67,11 @@ module.exports = class Bot {
         const this_cmd = await import(`${file}`);
         // generate a new Command and push it to command handlers
         let command = new Command(
-            this_cmd.default.command,
-            this_cmd.default.data,
-            this_cmd.default.execute,
-            this_cmd.default.update,
-            this_cmd.default.required_perms
+            this_cmd.default?.command ?? null,
+            this_cmd.default?.data ?? null,
+            this_cmd.default?.execute ?? null,
+            this_cmd.default?.update ?? null,
+            this_cmd.default?.required_perms ?? null
         );
         //push the command to the handler
         this.command_handlers.push(command);
@@ -81,9 +81,9 @@ module.exports = class Bot {
     load_message_handler_file = async (file) => {
         const this_message_handler = await import(`${file}`);
         let handler = new MessageHandler(
-            this_message_handler.default.data,
-            this_message_handler.default.requirements,
-            this_message_handler.default.callback
+            this_message_handler.default?.data ?? null,
+            this_message_handler.default?.requirements ?? null,
+            this_message_handler.default?.callback ?? null
         );
         //push the command to the handler
         this.message_handlers.push(handler);
@@ -104,11 +104,11 @@ module.exports = class Bot {
     // function to create a new command object and add it to the command list
     create_command = (command, data, execute, update, required_perms=null) => {
         let newcmd = new Command(
-            command,
-            data,
-            execute,
-            update,
-            required_perms
+            command ?? null,
+            data ?? null,
+            execute ?? null,
+            update ?? null,
+            required_perms ?? null
         );
         this.command_handlers.push(newcmd);
     }
@@ -116,9 +116,9 @@ module.exports = class Bot {
     // function to create a new message handler object and add it to the message handler list
     create_message_handler = (data, requirements, callback) => {
         let handler = new MessageHandler(
-            data,
-            requirements,
-            callback
+            data ?? null,
+            requirements ?? null,
+            callback ?? null
         );
         this.message_handlers.push(handler);
     }
@@ -133,7 +133,7 @@ module.exports = class Bot {
             await (async () => {
                 for(const c of this.command_handlers) {
                     commands?.create(c.command_properties); // Create the command
-        
+                    console.log(`Created command ${c.command_properties.name}`);
                     if(c.command_data?.requires_command_list) {
                         c.command_data.command_list_reference = this.command_handlers;
                     }
@@ -148,7 +148,6 @@ module.exports = class Bot {
     #message = async() => {
 
         this.client.on("message", async (message) => {
-            console.log("message");
             if(message.author.bot) return; // Ignore bots
     
             // loop through our message handlers and call them
@@ -161,12 +160,9 @@ module.exports = class Bot {
 
     #interaction = async() => {
         this.client.on('interactionCreate', async interaction => {
-            console.log("interaction");
-            console.log(`Interaction found : ${interaction}`); // Note that we detected an interaction
             if (!interaction.isCommand()) return; // Do nothing if it wasn't a command
 
             let command = interaction.command;
-            console.log(command);
             if (!command) return; // Verify that the command exists.
             // Iterate through command handlers
             for(const c of this.command_handlers) {

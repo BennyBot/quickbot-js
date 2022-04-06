@@ -22,14 +22,15 @@ module.exports = class MessageHandler {
             "endswith" : content.endsWith,
             "startswith" : content.startsWith,
             "regex" : content.match,
-            "equals" : (string) => {return content == string}
+            "equals" : (string) => {return content == string},
+            "all_messages" : true
         }
 
         matched = type_to_func[this.type_of_check](this.string);
 
         if (!matched) return;
 
-        this.data = await this.callback(message, this.data) ?? this.data;
+        this.data = await this?.callback(message, this.data) ?? this.data;
         return;
     }
 }

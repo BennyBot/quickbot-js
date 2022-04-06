@@ -5,11 +5,12 @@ let emojiDic = require("emoji-dictionary");
 const conclude = async (data, poll) => {
     data.concluded_polls.push(poll); // Add the poll to our concluded polls
     for(let i=0; i<data.active_polls.length; i++) {
-        console.log(poll == data.active_polls[i]);
         if(data.active_polls[i] == poll) {
             data.active_polls.splice(i, 1); // Remove the poll from active_polls
         }
     }
+
+
 
     let option_1_count = -1;
     let option_2_count = -1;
@@ -25,8 +26,6 @@ const conclude = async (data, poll) => {
             option_2_count = r[1].count // Set option_2_count to whatever emoji2's count is
         }
     }
-    console.log(option_1_count);
-    console.log(option_2_count);
     /*
         Make a reply to the poll stating the winner or if it tied
     */
@@ -41,6 +40,8 @@ const conclude = async (data, poll) => {
     }
     return data; // Return the modified data
 }
+
+
 module.exports = {
     execute : async (payload) => {
         let interaction = payload.interaction;
@@ -122,18 +123,23 @@ module.exports = {
 
         
         await interaction.reply({content:`Poll Created`,ephemeral: true}); // Reply to the author that the poll was created
-        console.log(payload_data); // Log the current poll data for debugging
+        
         return payload_data; // Return the modified data
     },
 
     update : async(time, data) => {
+        
         let polls = data.active_polls;
-        if(polls.length === 0) {
+        if((polls?.length ?? 0) === 0) {
             return data; // Don't do anything if there are no active polls
         }
+
+        /*
         console.log(time);
         console.log(`There are : ${polls.length} active polls`);
         console.log(`There are : ${data.concluded_polls.length} concluded polls`);
+        */
+        
         for(const p of polls) {
             if(time >= p.expiration) {
                 data = await conclude(data, p); // Conclude the poll if it has expired
