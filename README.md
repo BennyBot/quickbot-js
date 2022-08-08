@@ -20,7 +20,7 @@ This API comes with the following prewritten examples, showcasing the functional
     - hello : responds to any message containing "hello" with "Hello @<message_sender>"
 
 ## Installation Guide
-
+NOT YET FUNCTIONAL. NEED TO ADD TO NPM
 Installing quickbot is easy. Simply create a new node project and run
 ```sh
 npm install --save quickbot
