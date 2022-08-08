@@ -14,7 +14,7 @@ This API comes with the following prewritten examples, showcasing the functional
 - Commands:
     - /ping : Replies to the sender
     - /clear : Clears 'n' messages from the same channel (Requires channel management permissions)
-    - /help : Display commands and their arguments(required and optionional). Will automatically update as more commands are added to the bot.
+    - /help : Display commands and their arguments(required and optional). Will automatically update as more commands are added to the bot.
     - /poll : Creates a poll for an input duration that users can vote on using reactions. Will automatically reply with the winner of the poll once it expires
 - Message Handlers:
     - hello : responds to any message containing "hello" with "Hello @<message_sender>"
