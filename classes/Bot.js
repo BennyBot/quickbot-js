@@ -2,6 +2,9 @@ const Command = require('./Command.js');
 const MessageHandler = require('./MessageHandler.js');
 const fs = require('fs');
 const Discord = require("discord.js");
+const path = require('path');
+const url = require('url');
+
 
 // Add commands to the list of commands for the bot
 module.exports = class Bot {
@@ -44,7 +47,8 @@ module.exports = class Bot {
 
     // Load commands from a user input directory
     load_commands_directory = async (dir) => {
-        var command_files = fs.readdirSync(dir)
+        console.log(`import commands from ${dir}`);
+        const command_files = await fs.promises.readdir(url.fileURLToPath(dir));
         // iterate through all files in the directory;
         for(const f of command_files) {
             //load the file using our load_command_file
@@ -54,7 +58,8 @@ module.exports = class Bot {
 
     // Load message handlers from a user input directory
     load_message_handlers_directory = async (dir) => {
-        var message_handlers_files = fs.readdirSync(dir)
+        console.log(`import message handlers from ${dir}`);
+        const message_handlers_files = await fs.promises.readdir(url.fileURLToPath(dir))
         // iterate through all files in the directory;
         for(const f of message_handlers_files) {
             // load the file using our load file function
@@ -67,11 +72,11 @@ module.exports = class Bot {
         const this_cmd = await import(`${file}`);
         // generate a new Command and push it to command handlers
         let command = new Command(
-            this_cmd.default?.command ?? null,
-            this_cmd.default?.data ?? null,
-            this_cmd.default?.execute ?? null,
-            this_cmd.default?.update ?? null,
-            this_cmd.default?.required_perms ?? null
+            this_cmd.default?.command ?? (this_cmd?.command ?? null),
+            this_cmd.default?.data ?? (this_cmd?.data ?? null),
+            this_cmd.default?.execute ?? (this_cmd?.execute ?? null),
+            this_cmd.default?.update ?? (this_cmd?.update ?? null),
+            this_cmd.default?.required_perms ?? (this_cmd?.required_perms ?? null)
         );
         //push the command to the handler
         this.command_handlers.push(command);
@@ -81,9 +86,9 @@ module.exports = class Bot {
     load_message_handler_file = async (file) => {
         const this_message_handler = await import(`${file}`);
         let handler = new MessageHandler(
-            this_message_handler.default?.data ?? null,
-            this_message_handler.default?.requirements ?? null,
-            this_message_handler.default?.callback ?? null
+            this_message_handler.default?.data ?? (this_message_handler?.data ?? null),
+            this_message_handler.default?.requirements ?? (this_message_handler?.requirements ?? null),
+            this_message_handler.default?.callback ?? (this_message_handler?.callback ?? null)
         );
         //push the command to the handler
         this.message_handlers.push(handler);
@@ -145,9 +150,11 @@ module.exports = class Bot {
         return;
     }
 
-    #message = async() => {
+    #message = async(message) => {
 
-        this.client.on("message", async (message) => {
+        this.client.on("messageCreate", async (message) => {
+            console.log("message received");
+            console.log(this.message_handlers);
             if(message.author.bot) return; // Ignore bots
     
             // loop through our message handlers and call them
