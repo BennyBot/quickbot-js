@@ -18,15 +18,19 @@ module.exports = class MessageHandler {
         let matched = false;
 
         let type_to_func = {
-            "contains" : (string) => {return content.includes(string)},
-            "endswith" : (string) => {return content.endsWith(string)},
-            "startswith" : (string) => {return content.startsWith(string)},
-            "equals" : (string) => {return content == string},
-            "regex" : (string) => {return content.match(string)},
-            "all_messages" : (string) => {return true}
+            "contains" : ((string) => {return content.includes(string)}),
+            "endswith" : ((string) => {return content.endsWith(string)}),
+            "startswith" : ((string) => {return content.startsWith(string)}),
+            "equals" : ((string) => {return content == string}),
+            "regex" : ((string) => {return content.match(string)}),
+            "all_messages" : ((string) => {return true})
         }
-        matched = type_to_func[this.type_of_check](this.string);
-        
+        let matched_func = type_to_func[this.type_of_check] ?? ((string) => {
+            console.log(`Invalid MessageHandler Requirement used. Used: ${this.type_of_check}`);
+            return false
+        });
+        matched = matched_func(this.string);
+
         if (!matched) return;
         this.data = await this?.callback(message, this.data) ?? this.data;
         return;
