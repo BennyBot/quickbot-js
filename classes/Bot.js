@@ -71,6 +71,12 @@ module.exports = class Bot {
     load_command_file = async (file) => {
         const this_cmd = await import(`${file}`);
         // generate a new Command and push it to command handlers
+
+        //console.log(`Current Client: ${this_cmd.client}.`);
+        if(this_cmd?.client ?? false) {
+            this_cmd.set_client(this.client);
+        }
+
         let command = new Command(
             this_cmd.default?.command ?? (this_cmd?.command ?? null),
             this_cmd.default?.data ?? (this_cmd?.data ?? null),
@@ -78,6 +84,7 @@ module.exports = class Bot {
             this_cmd.default?.update ?? (this_cmd?.update ?? null),
             this_cmd.default?.required_perms ?? (this_cmd?.required_perms ?? null)
         );
+        
         //push the command to the handler
         this.command_handlers.push(command);
     }
@@ -85,6 +92,11 @@ module.exports = class Bot {
     // Load a single message handler from a user input file
     load_message_handler_file = async (file) => {
         const this_message_handler = await import(`${file}`);
+
+        if(this_message_handler?.client ?? false) {
+            this_message_handler.set_client(this.client);
+        }
+
         let handler = new MessageHandler(
             this_message_handler.default?.data ?? (this_message_handler?.data ?? null),
             this_message_handler.default?.requirements ?? (this_message_handler?.requirements ?? null),
@@ -220,7 +232,9 @@ module.exports = class Bot {
         }
 
         this.client.login(this.TOKEN_ID);
+        console.log("Bot started.");
         return true;
+
 
     }
 

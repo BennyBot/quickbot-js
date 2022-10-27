@@ -6,8 +6,10 @@ module.exports = {
         let payload_data = payload.data;
  
         // Delete n messages from the interaction channel
-        await interaction.channel.bulkDelete(+interaction.options.getInteger("amount"), false);
-        await interaction.reply({content: "Deleted messages", ephemeral: true});
+        let n = +interaction.options.getInteger("amount");
+        n = n > 100 ? 100 : n
+        await interaction.channel.bulkDelete(n, false);
+        await interaction.reply({content: `Deleted ${n} messages`, ephemeral: true});
     },
 
     update : async(time, data) => {

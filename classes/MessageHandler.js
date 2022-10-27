@@ -23,7 +23,7 @@ module.exports = class MessageHandler {
             "startswith" : (string) => {return content.startsWith(string)},
             "equals" : (string) => {return content == string},
             "regex" : (string) => {return content.match(string)},
-            "all_messages" : true
+            "all_messages" : (string) => {return true}
         }
         matched = type_to_func[this.type_of_check](this.string);
         

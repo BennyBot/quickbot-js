@@ -17,12 +17,22 @@ module.exports = class Command {
         if(!this.command_execute) {
             return false;
         }
-
+        //console.log(interaction.member.roles.cache);
         // check if the user has the required permissions
         if(this.command_required_perms) {
             let has_perms = true;
+            console.log(this.command_required_perms);
+
             for(let perm of this.command_required_perms) {
-                if(!interaction.member.permissions.has(perm)) {
+                let result;
+                if(perm.type === "discord_permission") {
+                    result = interaction.member.permissions.has(perm.value);
+                } else if (perm.type === "role") {
+                    result = interaction.member.roles.cache.map((role) => role.name).includes(perm.value);
+                } 
+                
+                result = perm.check === "has" ? result : !result;
+                if(!result) {
                     has_perms = false;
                     break;
                 }
